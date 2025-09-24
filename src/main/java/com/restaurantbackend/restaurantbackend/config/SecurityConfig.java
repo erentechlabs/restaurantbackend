@@ -3,6 +3,7 @@ package com.restaurantbackend.restaurantbackend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,22 +22,23 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/api/sessions/start/**",
-                                "/api/orders/**",
-                                "/api/menu/**",
-                                "/api/categories/**"
-                        ).permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/sessions/start/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/orders/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/orders/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/menu/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
 
 
-                        .requestMatchers(
-                                "/api/sessions/close/**",
-                                "/api/tables/**",
-                                "/api/menu-items/**",
-                                "/api/categories/**"
-                        ).hasRole("ADMIN")
-
-                        .anyRequest().authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/sessions/close/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST,"/api/tables/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,"/api/tables/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/api/tables/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/menu/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/menu/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/menu/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/categories/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/categories/**").hasRole("ADMIN")
                 )
                 .httpBasic(Customizer.withDefaults());
         return http.build();
