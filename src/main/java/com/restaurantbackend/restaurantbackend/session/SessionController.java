@@ -3,21 +3,28 @@ package com.restaurantbackend.restaurantbackend.session;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/sessions")
+@RequestMapping("/api/v1/sessions/")
 @RequiredArgsConstructor
 public class SessionController {
 
     private final SessionService sessionService;
 
-    @PostMapping("/start/nfc/{tagCode}")
-    public SessionDTO startSession(@PathVariable String tagCode) {
-        return sessionService.startSessionByNfc(tagCode);
+    @GetMapping("active")
+    public List<SessionDTO> getActiveSessions() {
+        return sessionService.getActiveSessions();
     }
 
-    @PostMapping("/close/code/{code}")
-    public void closeSessionByCode(@PathVariable String code) {
-        sessionService.closeSessionByCode(code);
+    @PostMapping("start/{nfctagCode}")
+    public SessionDTO startSession(@PathVariable String nfctagCode) {
+        return sessionService.startSessionByNfc(nfctagCode);
+    }
+
+    @PostMapping("close/{nfctagCode}")
+    public void closeSessionByCode(@PathVariable String nfctagCode) {
+        sessionService.closeSessionByCode(nfctagCode);
     }
 
 }

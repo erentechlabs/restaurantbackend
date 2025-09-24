@@ -1,14 +1,16 @@
 package com.restaurantbackend.restaurantbackend.session;
 
+
 import com.restaurantbackend.restaurantbackend.order.Order;
 import com.restaurantbackend.restaurantbackend.order.OrderDTO;
 import com.restaurantbackend.restaurantbackend.order.OrderItemDTO;
 import com.restaurantbackend.restaurantbackend.table.TableRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -19,6 +21,15 @@ public class SessionService {
 
     private final SessionRepository sessionRepository;
     private final TableRepository tableRepository;
+
+    @Transactional
+    public List<SessionDTO> getActiveSessions() {
+        return sessionRepository.findAll().stream()
+                .filter(Session::isActive)
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
 
     @Transactional
     public SessionDTO startSessionByNfc(String nfcTagCode) {

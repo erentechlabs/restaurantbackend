@@ -6,28 +6,28 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/menu")
+@RequestMapping("/api/v1/menu/")
 @RequiredArgsConstructor
 public class MenuController {
 
     private final MenuService menuService;
 
-    @GetMapping
+    @GetMapping("all")
     public List<MenuItemDTO> getAllMenuItems() {
         return menuService.getAllMenuItems();
     }
 
-    @PostMapping
+    @PostMapping("add")
     public MenuItemDTO addMenuItem(@RequestBody MenuItemDTO dto) {
         return menuService.addMenuItem(dto);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("updatemenubyid/{id}")
     public MenuItemDTO updateMenuItem(@PathVariable Long id, @RequestBody MenuItemDTO dto) {
         return menuService.updateMenuItem(id, dto);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("deletemenubyid/{id}")
     public void deleteMenuItem(@PathVariable Long id) {
         menuService.deleteMenuItem(id);
     }

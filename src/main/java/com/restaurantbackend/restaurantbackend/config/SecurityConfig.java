@@ -22,11 +22,10 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/sessions/start/nfc/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/orders/place/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/orders/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/menu/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/sessions/start/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/orders/table/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/menu/all").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/categories/all").permitAll()
                         .anyRequest().authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());

@@ -1,11 +1,11 @@
 package com.restaurantbackend.restaurantbackend.session;
 import com.restaurantbackend.restaurantbackend.order.Order;
-import com.restaurantbackend.restaurantbackend.table.Table;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import com.restaurantbackend.restaurantbackend.table.Table;
 
 @Entity
 @Data

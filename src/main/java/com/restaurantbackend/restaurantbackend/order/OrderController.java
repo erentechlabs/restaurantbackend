@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/api/v1/orders/")
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
     private final SessionService sessionService;
 
-    @PostMapping("/place/{sessionCode}")
+    @PostMapping("table/{sessionCode}")
     public OrderDTO placeOrder(@PathVariable String sessionCode, @RequestBody List<OrderItemDTO> items) {
         Session session = sessionService.findByCode(sessionCode)
                 .orElseThrow(() -> new IllegalArgumentException("Session not found"));
