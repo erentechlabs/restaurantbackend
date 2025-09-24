@@ -13,18 +13,18 @@ public class TableController {
     private final TableService tableService;
 
     @GetMapping
-    public List<Table> getAllTables() {
+    public List<TableDTO> getAllTables() {
         return tableService.getAll();
     }
 
     @PostMapping
-    public Table addTable(@RequestBody Table table) {
-        return tableService.add(table);
+    public TableDTO addTable(@RequestBody TableDTO dto) {
+        return tableService.add(dto);
     }
 
     @PutMapping("/{id}")
-    public Table updateTable(@PathVariable Long id, @RequestBody Table table) {
-        return tableService.update(id, table);
+    public TableDTO updateTable(@PathVariable Long id, @RequestBody TableDTO dto) {
+        return tableService.update(id, dto);
     }
 
     @DeleteMapping("/{id}")

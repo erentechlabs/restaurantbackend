@@ -1,8 +1,11 @@
 package com.restaurantbackend.restaurantbackend.session;
+import com.restaurantbackend.restaurantbackend.order.Order;
 import com.restaurantbackend.restaurantbackend.table.Table;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Data
@@ -15,7 +18,7 @@ public class Session {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String sessionCode; // NFC ile açılan link için
+    private String sessionCode;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
@@ -24,4 +27,7 @@ public class Session {
     private Table table;
 
     private boolean active;
+
+    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders = new ArrayList<>();
 }

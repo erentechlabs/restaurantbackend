@@ -15,8 +15,9 @@ public class OrderController {
     private final SessionService sessionService;
 
     @PostMapping("/place/{sessionCode}")
-    public Order placeOrder(@PathVariable String sessionCode, @RequestBody List<OrderItem> items) {
-        Session session = sessionService.findByCode(sessionCode).orElseThrow();
+    public OrderDTO placeOrder(@PathVariable String sessionCode, @RequestBody List<OrderItemDTO> items) {
+        Session session = sessionService.findByCode(sessionCode)
+                .orElseThrow(() -> new IllegalArgumentException("Session not found"));
         return orderService.placeOrder(session, items);
     }
 }
