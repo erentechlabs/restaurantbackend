@@ -12,27 +12,18 @@ import java.util.stream.Collectors;
 public class MenuService {
     private final MenuRepository menuRepository;
     private final CategoryRepository categoryRepository;
+    private final MenuMapper menuMapper;
 
     public List<MenuItemDTO> getAllMenuItems() {
         return menuRepository.findAll().stream()
-                .map(this::convertToDTO)
+                .map(menuMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     public MenuItemDTO getMenuItemById(Long id) {
         return menuRepository.findById(id)
-                .map(this::convertToDTO)
+                .map(menuMapper::toDTO)
                 .orElseThrow(() -> new IllegalArgumentException("MenuItem not found: " + id));
-    }
-
-    private MenuItemDTO convertToDTO(MenuItem menuItem) {
-        MenuItemDTO dto = new MenuItemDTO();
-        dto.setId(menuItem.getId());
-        dto.setName(menuItem.getName());
-        dto.setPrice(menuItem.getPrice());
-        dto.setDescription(menuItem.getDescription());
-        dto.setCategoryName(menuItem.getCategory() != null ? menuItem.getCategory().getName() : null);
-        return dto;
     }
 
     public MenuItemDTO addMenuItem(MenuItemDTO dto) {
@@ -52,7 +43,7 @@ public class MenuService {
         }
 
         MenuItem saved = menuRepository.save(menuItem);
-        return convertToDTO(saved);
+        return menuMapper.toDTO(saved);
     }
 
     public MenuItemDTO updateMenuItem(Long id, MenuItemDTO dto) {
@@ -74,7 +65,7 @@ public class MenuService {
         }
 
         MenuItem saved = menuRepository.save(existing);
-        return convertToDTO(saved);
+        return menuMapper.toDTO(saved);
     }
 
     public void deleteMenuItem(Long id) {

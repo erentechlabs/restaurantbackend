@@ -13,25 +13,26 @@ public class CategoryController {
 
     private final CategoryService categoryService;
 
-    @GetMapping("/all")
-    public List<Category> getAllCategories() {
+    @GetMapping("/get")
+    public List<CategoryDTO> getAllCategories() {
         return categoryService.getAllCategories();
     }
 
-    @GetMapping("/getcategorybyid/{id}")
-    public ResponseEntity<Category> getCategoryById(@PathVariable Long id) {
+    @GetMapping("/get/{id}")
+    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long id) {
         return categoryService.getCategoryById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/create")
-    public Category createCategory(@RequestBody CategoryDTO dto) {
-        return categoryService.createCategory(dto);
+    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO dto) {
+        CategoryDTO created = categoryService.createCategory(dto);
+        return ResponseEntity.ok(created);
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO dto) {
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO dto) {
         return categoryService.updateCategory(id, dto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

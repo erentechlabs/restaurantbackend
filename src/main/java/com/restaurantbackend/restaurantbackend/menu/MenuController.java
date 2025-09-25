@@ -12,12 +12,12 @@ public class MenuController {
 
     private final MenuService menuService;
 
-    @GetMapping("/all")
+    @GetMapping("/get")
     public List<MenuItemDTO> getAllMenuItems() {
         return menuService.getAllMenuItems();
     }
 
-    @GetMapping("/getmenubyid/{id}")
+    @GetMapping("/get/{id}")
     public MenuItemDTO getMenuItemById(@PathVariable Long id) {
         return menuService.getMenuItemById(id);
     }
@@ -27,12 +27,12 @@ public class MenuController {
         return menuService.addMenuItem(dto);
     }
 
-    @PutMapping("/updatemenubyid/{id}")
+    @PutMapping("/update/{id}")
     public MenuItemDTO updateMenuItem(@PathVariable Long id, @RequestBody MenuItemDTO dto) {
         return menuService.updateMenuItem(id, dto);
     }
 
-    @DeleteMapping("/deletemenubyid/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteMenuItem(@PathVariable Long id) {
         menuService.deleteMenuItem(id);
     }

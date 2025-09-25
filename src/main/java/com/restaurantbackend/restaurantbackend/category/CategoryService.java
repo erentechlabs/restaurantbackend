@@ -1,75 +1,63 @@
 package com.restaurantbackend.restaurantbackend.category;
 
-import com.restaurantbackend.restaurantbackend.menu.MenuItem;
-import com.restaurantbackend.restaurantbackend.menu.MenuItemDTO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
-    public CategoryService(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
+    public List<CategoryDTO> getAllCategories() {
+        return categoryRepository.findAll().stream()
+                .map(categoryMapper::toDTO)
+                .toList();
     }
 
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
-    }
-
-    public Optional<Category> getCategoryById(Long id) {
-        return categoryRepository.findById(id);
-    }
-
-    @Transactional
-    public Category createCategory(CategoryDTO dto) {
-        Category category = new Category();
-        category.setName(dto.getName());
-
-        if (dto.getMenuItems() != null) {
-            List<MenuItem> menuItems = dto.getMenuItems().stream().map(menuItemDTO -> {
-                MenuItem menuItem = new MenuItem();
-                menuItem.setName(menuItemDTO.getName());
-                menuItem.setPrice(menuItemDTO.getPrice());
-                menuItem.setDescription(menuItemDTO.getDescription());
-                menuItem.setCategory(category);
-                return menuItem;
-            }).collect(Collectors.toList());
-            category.setMenuItems(menuItems);
-        }
-
-        return categoryRepository.save(category);
+    public Optional<CategoryDTO> getCategoryById(Long id) {
+        return categoryRepository.findById(id)
+                .map(categoryMapper::toDTO);
     }
 
     @Transactional
-    public Optional<Category> updateCategory(Long id, CategoryDTO dto) {
+    public CategoryDTO createCategory(CategoryDTO dto) {
+        Category category = categoryMapper.toEntity(dto);
+        Category saved = categoryRepository.save(category);
+        return categoryMapper.toDTO(saved);
+    }
+
+    @Transactional
+    public Optional<CategoryDTO> updateCategory(Long id, CategoryDTO dto) {
         return categoryRepository.findById(id).map(category -> {
             category.setName(dto.getName());
 
             category.getMenuItems().clear();
+
             if (dto.getMenuItems() != null) {
-                List<MenuItem> menuItems = new ArrayList<>();
-                for (MenuItemDTO itemDTO : dto.getMenuItems()) {
-                    MenuItem menuItem = new MenuItem();
-                    menuItem.setName(itemDTO.getName());
-                    menuItem.setPrice(itemDTO.getPrice());
-                    menuItem.setDescription(itemDTO.getDescription());
-                    menuItem.setCategory(category);
-                    MenuItem apply = menuItem;
-                    menuItems.add(apply);
-                }
+                List<com.restaurantbackend.restaurantbackend.menu.MenuItem> menuItems = dto.getMenuItems().stream()
+                        .map(itemDTO -> {
+                            com.restaurantbackend.restaurantbackend.menu.MenuItem menuItem = new com.restaurantbackend.restaurantbackend.menu.MenuItem();
+                            menuItem.setName(itemDTO.getName());
+                            menuItem.setPrice(itemDTO.getPrice());
+                            menuItem.setDescription(itemDTO.getDescription());
+                            menuItem.setCategory(category);
+                            return menuItem;
+                        }).toList();
+
                 category.getMenuItems().addAll(menuItems);
             }
 
-            return categoryRepository.save(category);
+            Category saved = categoryRepository.save(category);
+            return categoryMapper.toDTO(saved);
         });
     }
+
 
     public boolean deleteCategory(Long id) {
         return categoryRepository.findById(id).map(category -> {

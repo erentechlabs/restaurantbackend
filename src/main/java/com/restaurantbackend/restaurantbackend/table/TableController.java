@@ -6,28 +6,28 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/tables")
+@RequestMapping("/api/v1/tables")
 @RequiredArgsConstructor
 public class TableController {
 
     private final TableService tableService;
 
-    @GetMapping
+    @GetMapping("/all")
     public List<TableDTO> getAllTables() {
         return tableService.getAll();
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public TableDTO addTable(@RequestBody TableDTO dto) {
         return tableService.add(dto);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/update/{id}")
     public TableDTO updateTable(@PathVariable Long id, @RequestBody TableDTO dto) {
         return tableService.update(id, dto);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public void deleteTable(@PathVariable Long id) {
         tableService.delete(id);
     }

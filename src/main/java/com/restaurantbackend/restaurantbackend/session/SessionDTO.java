@@ -9,6 +9,7 @@ import java.util.List;
 public class SessionDTO {
     private String sessionCode;
     private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private boolean active;
     private Long tableId;
     private int tableNumber;

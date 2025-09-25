@@ -1,13 +1,9 @@
 package com.restaurantbackend.restaurantbackend.session;
 
-
-import com.restaurantbackend.restaurantbackend.order.Order;
-import com.restaurantbackend.restaurantbackend.order.OrderDTO;
-import com.restaurantbackend.restaurantbackend.order.OrderItemDTO;
 import com.restaurantbackend.restaurantbackend.table.TableRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,15 +17,15 @@ public class SessionService {
 
     private final SessionRepository sessionRepository;
     private final TableRepository tableRepository;
+    private final SessionMapper sessionMapper;
 
     @Transactional
     public List<SessionDTO> getActiveSessions() {
         return sessionRepository.findAll().stream()
                 .filter(Session::isActive)
-                .map(this::convertToDTO)
+                .map(sessionMapper::toDTO)
                 .collect(Collectors.toList());
     }
-
 
     @Transactional
     public SessionDTO startSessionByNfc(String nfcTagCode) {
@@ -48,8 +44,9 @@ public class SessionService {
             s.setActive(true);
             return sessionRepository.save(s);
         });
+        session.getOrders().size();
 
-        return convertToDTO(session);
+        return sessionMapper.toDTO(session);
     }
 
     @Transactional
@@ -61,34 +58,7 @@ public class SessionService {
         });
     }
 
-
     public Optional<Session> findByCode(String code) {
         return sessionRepository.findBySessionCode(code);
-    }
-
-    private SessionDTO convertToDTO(Session session) {
-        SessionDTO dto = new SessionDTO();
-        dto.setSessionCode(session.getSessionCode());
-        dto.setStartTime(session.getStartTime());
-        dto.setActive(session.isActive());
-        dto.setTableId(session.getTable().getId());
-        dto.setTableNumber(session.getTable().getNumber());
-        dto.setOrders(session.getOrders().stream()
-                .map(this::convertOrderToDTO)
-                .collect(Collectors.toList()));
-        return dto;
-    }
-
-    private OrderDTO convertOrderToDTO(Order order) {
-        OrderDTO dto = new OrderDTO();
-        dto.setId(order.getId());
-        dto.setOrderTime(order.getOrderTime());
-        dto.setItems(order.getItems().stream().map(item -> {
-            OrderItemDTO itemDTO = new OrderItemDTO();
-            itemDTO.setMenuItemName(item.getMenuItem().getName());
-            itemDTO.setQuantity(item.getQuantity());
-            return itemDTO;
-        }).collect(Collectors.toList()));
-        return dto;
     }
 }

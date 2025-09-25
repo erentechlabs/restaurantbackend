@@ -7,37 +7,51 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;
     private final MenuRepository menuRepository;
+    private final OrderMapper orderMapper;
 
     @Transactional
     public OrderDTO placeOrder(Session session, List<OrderItemDTO> itemsDto) {
-        final Order order = new Order();
-        order.setSession(session);
-        order.setOrderTime(LocalDateTime.now());
-
-        List<OrderItem> items = itemsDto.stream().map(dto -> {
-            MenuItem menuItem = menuRepository.findByName(dto.getMenuItemName())
-                    .orElseThrow(() -> new IllegalArgumentException("Menu item not found: " + dto.getMenuItemName()));
-            OrderItem item = new OrderItem();
-            item.setMenuItem(menuItem);
-            item.setQuantity(dto.getQuantity());
-            item.setOrder(order);
-            return item;
-        }).collect(Collectors.toList());
-
-        order.setItems(items);
+        Order order = orderMapper.toEntity(session, itemsDto);
         orderRepository.save(order);
-
-        return convertOrderToDTO(order);
+        return orderMapper.toDTO(order);
     }
+
+    @Transactional
+    public OrderDTO updateOrder(Session session, List<OrderItemDTO> newItems) {
+        Order order = orderRepository.findBySession(session)
+                .orElseThrow(() -> new IllegalArgumentException("No order found for this session"));
+
+        for (OrderItemDTO newItemDTO : newItems) {
+            OrderItem existingItem = order.getItems().stream()
+                    .filter(i -> i.getMenuItem().getName().equals(newItemDTO.getMenuItemName()))
+                    .findFirst()
+                    .orElse(null);
+
+            MenuItem menuItem = menuRepository.findByName(newItemDTO.getMenuItemName())
+                    .orElseThrow(() -> new IllegalArgumentException("Menu item not found"));
+
+            if (existingItem != null) {
+                existingItem.setQuantity(existingItem.getQuantity() + newItemDTO.getQuantity());
+            } else {
+                OrderItem orderItem = new OrderItem();
+                orderItem.setMenuItem(menuItem);
+                orderItem.setQuantity(newItemDTO.getQuantity());
+                orderItem.setOrder(order);
+                order.getItems().add(orderItem);
+            }
+        }
+
+        orderRepository.save(order);
+        return orderMapper.toDTO(order);
+    }
+
 
     @Transactional
     public OrderDTO updateOrderItem(Long orderId, String oldItemName, OrderItemDTO newItemDTO) {
@@ -55,19 +69,6 @@ public class OrderService {
         item.setMenuItem(newMenuItem);
         item.setQuantity(newItemDTO.getQuantity());
 
-        return convertOrderToDTO(order);
-    }
-
-    private OrderDTO convertOrderToDTO(Order order) {
-        OrderDTO dto = new OrderDTO();
-        dto.setId(order.getId());
-        dto.setOrderTime(order.getOrderTime());
-        dto.setItems(order.getItems().stream().map(item -> {
-            OrderItemDTO itemDTO = new OrderItemDTO();
-            itemDTO.setMenuItemName(item.getMenuItem().getName());
-            itemDTO.setQuantity(item.getQuantity());
-            return itemDTO;
-        }).collect(Collectors.toList()));
-        return dto;
+        return orderMapper.toDTO(order);
     }
 }
