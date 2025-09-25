@@ -19,8 +19,15 @@ public class MenuService {
                 .collect(Collectors.toList());
     }
 
+    public MenuItemDTO getMenuItemById(Long id) {
+        return menuRepository.findById(id)
+                .map(this::convertToDTO)
+                .orElseThrow(() -> new IllegalArgumentException("MenuItem not found: " + id));
+    }
+
     private MenuItemDTO convertToDTO(MenuItem menuItem) {
         MenuItemDTO dto = new MenuItemDTO();
+        dto.setId(menuItem.getId());
         dto.setName(menuItem.getName());
         dto.setPrice(menuItem.getPrice());
         dto.setDescription(menuItem.getDescription());

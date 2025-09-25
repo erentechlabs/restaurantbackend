@@ -17,6 +17,11 @@ public class MenuController {
         return menuService.getAllMenuItems();
     }
 
+    @GetMapping("/getmenubyid/{id}")
+    public MenuItemDTO getMenuItemById(@PathVariable Long id) {
+        return menuService.getMenuItemById(id);
+    }
+
     @PostMapping("/add")
     public MenuItemDTO addMenuItem(@RequestBody MenuItemDTO dto) {
         return menuService.addMenuItem(dto);
