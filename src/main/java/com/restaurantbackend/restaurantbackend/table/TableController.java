@@ -12,12 +12,12 @@ public class TableController {
 
     private final TableService tableService;
 
-    @GetMapping("/all")
+    @GetMapping
     public List<TableDTO> getAllTables() {
         return tableService.getAll();
     }
 
-    @PostMapping("/add")
+    @PostMapping
     public TableDTO addTable(@RequestBody TableDTO dto) {
         return tableService.add(dto);
     }
