@@ -191,19 +191,19 @@ Retrieves all menu categories.
 
 `/api/categories`
 
-Adds a new menu category. `(Admin)`
+Adds a new menu subCategory. `(Admin)`
 
 `PUT`
 
 `/api/categories/{id}`
 
-Updates an existing category. `(Admin)`
+Updates an existing subCategory. `(Admin)`
 
 `DELETE`
 
 `/api/categories/{id}`
 
-Deletes a category. `(Admin)`
+Deletes a subCategory. `(Admin)`
 
 ----------
 

@@ -11,7 +11,7 @@ public class MenuMapper {
         dto.setName(menuItem.getName());
         dto.setPrice(menuItem.getPrice());
         dto.setDescription(menuItem.getDescription());
-        dto.setCategoryName(menuItem.getCategory() != null ? menuItem.getCategory().getName() : null);
+        dto.setSubCategoryName(menuItem.getSubCategory() != null ? menuItem.getSubCategory().getName() : null);
         return dto;
     }
 
@@ -21,7 +21,6 @@ public class MenuMapper {
         menuItem.setName(dto.getName());
         menuItem.setPrice(dto.getPrice());
         menuItem.setDescription(dto.getDescription());
-        // Category ilişkisini service katmanı set edecek (business logic)
         return menuItem;
     }
 }

@@ -1,4 +1,4 @@
-package com.restaurantbackend.restaurantbackend.category;
+package com.restaurantbackend.restaurantbackend.subcategory;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -7,41 +7,48 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/categories")
+@RequestMapping("/api/v1/categories/{categoryId}/subcategories")
 @RequiredArgsConstructor
-public class CategoryController {
+public class SubCategoryController {
 
-    private final CategoryService categoryService;
+    private final SubCategoryService subCategoryService;
 
-    @GetMapping("/get")
-    public List<CategoryDTO> getAllCategories() {
-        return categoryService.getAllCategories();
+    @GetMapping
+    public List<SubCategoryDTO> getAllSubCategories(@PathVariable Long categoryId) {
+        return subCategoryService.getAllSubCategories(categoryId);
     }
 
-    @GetMapping("/get/{id}")
-    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long id) {
-        return categoryService.getCategoryById(id)
+    @GetMapping("/{id}")
+    public ResponseEntity<SubCategoryDTO> getSubCategoryById(@PathVariable Long categoryId, @PathVariable Long id) {
+        return subCategoryService.getSubCategoryById(categoryId, id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO dto) {
-        CategoryDTO created = categoryService.createCategory(dto);
+    @PostMapping
+    public ResponseEntity<SubCategoryDTO> createSubCategory(
+            @PathVariable Long categoryId,
+            @RequestBody SubCategoryDTO dto
+    ) {
+        SubCategoryDTO created = subCategoryService.createSubCategory(categoryId, dto);
         return ResponseEntity.ok(created);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO dto) {
-        return categoryService.updateCategory(id, dto)
+    @PutMapping("/{id}")
+    public ResponseEntity<SubCategoryDTO> updateSubCategory(
+            @PathVariable Long categoryId,
+            @PathVariable Long id,
+            @RequestBody SubCategoryDTO dto
+    ) {
+        return subCategoryService.updateSubCategory(categoryId, id, dto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
-        return categoryService.deleteCategory(id) ?
-                ResponseEntity.noContent().build() :
-                ResponseEntity.notFound().build();
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSubCategory(@PathVariable Long categoryId, @PathVariable Long id) {
+        return subCategoryService.deleteSubCategory(categoryId, id)
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.notFound().build();
     }
 }

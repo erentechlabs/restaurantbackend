@@ -1,9 +1,9 @@
-package com.restaurantbackend.restaurantbackend.category;
+package com.restaurantbackend.restaurantbackend.subcategory;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface CategoryRepository extends JpaRepository<Category, Long> {
-    Optional<Category> findByName(String name);
+public interface SubCategoryRepository extends JpaRepository<SubCategory, Long> {
+    Optional<SubCategory> findByName(String name);
 }

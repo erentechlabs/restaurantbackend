@@ -1,7 +1,7 @@
 package com.restaurantbackend.restaurantbackend.menu;
 
-import com.restaurantbackend.restaurantbackend.category.Category;
-import com.restaurantbackend.restaurantbackend.category.CategoryRepository;
+import com.restaurantbackend.restaurantbackend.subcategory.SubCategory;
+import com.restaurantbackend.restaurantbackend.subcategory.SubCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MenuService {
     private final MenuRepository menuRepository;
-    private final CategoryRepository categoryRepository;
+    private final SubCategoryRepository subCategoryRepository;
     private final MenuMapper menuMapper;
 
     public List<MenuItemDTO> getAllMenuItems() {
@@ -32,14 +32,14 @@ public class MenuService {
         menuItem.setPrice(dto.getPrice());
         menuItem.setDescription(dto.getDescription());
 
-        if (dto.getCategoryName() != null) {
-            Category category = categoryRepository.findByName(dto.getCategoryName())
+        if (dto.getSubCategoryName() != null) {
+            SubCategory subCategory = subCategoryRepository.findByName(dto.getSubCategoryName())
                     .orElseGet(() -> {
-                        Category newCat = new Category();
-                        newCat.setName(dto.getCategoryName());
-                        return categoryRepository.save(newCat);
+                        SubCategory newCat = new SubCategory();
+                        newCat.setName(dto.getSubCategoryName());
+                        return subCategoryRepository.save(newCat);
                     });
-            menuItem.setCategory(category);
+            menuItem.setSubCategory(subCategory);
         }
 
         MenuItem saved = menuRepository.save(menuItem);
@@ -54,14 +54,14 @@ public class MenuService {
         if (dto.getDescription() != null) existing.setDescription(dto.getDescription());
         existing.setPrice(dto.getPrice());
 
-        if (dto.getCategoryName() != null) {
-            Category category = categoryRepository.findByName(dto.getCategoryName())
+        if (dto.getSubCategoryName() != null) {
+            SubCategory subCategory = subCategoryRepository.findByName(dto.getSubCategoryName())
                     .orElseGet(() -> {
-                        Category newCat = new Category();
-                        newCat.setName(dto.getCategoryName());
-                        return categoryRepository.save(newCat);
+                        SubCategory newCat = new SubCategory();
+                        newCat.setName(dto.getSubCategoryName());
+                        return subCategoryRepository.save(newCat);
                     });
-            existing.setCategory(category);
+            existing.setSubCategory(subCategory);
         }
 
         MenuItem saved = menuRepository.save(existing);

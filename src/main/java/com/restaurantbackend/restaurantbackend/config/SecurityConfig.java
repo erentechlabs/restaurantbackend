@@ -22,11 +22,15 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                                .anyRequest().permitAll()
+                        /*
                         .requestMatchers(HttpMethod.POST, "/api/v1/sessions/start/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/orders/table/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/menu/get").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/categories/all").permitAll()
                         .anyRequest().authenticated()
+
+                         */
                 )
                 .httpBasic(Customizer.withDefaults());
         return http.build();

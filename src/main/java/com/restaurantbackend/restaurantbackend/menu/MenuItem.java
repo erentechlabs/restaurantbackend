@@ -2,7 +2,7 @@ package com.restaurantbackend.restaurantbackend.menu;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.restaurantbackend.restaurantbackend.category.Category;
+import com.restaurantbackend.restaurantbackend.subcategory.SubCategory;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,7 +21,7 @@ public class MenuItem {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "sub_category_id")
     @JsonIgnore
-    private Category category;
+    private SubCategory subCategory;
 }

@@ -12,7 +12,7 @@ public class SessionController {
 
     private final SessionService sessionService;
 
-    @GetMapping("/active")
+    @GetMapping
     public List<SessionDTO> getActiveSessions() {
         return sessionService.getActiveSessions();
     }

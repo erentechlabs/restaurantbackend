@@ -14,14 +14,14 @@ public class OrderController {
     private final OrderService orderService;
     private final SessionService sessionService;
 
-    @PostMapping("/create/{sessionCode}")
+    @PostMapping("/{sessionCode}")
     public OrderDTO tableOrder(@PathVariable String sessionCode, @RequestBody List<OrderItemDTO> items) {
         Session session = sessionService.findByCode(sessionCode)
                 .orElseThrow(() -> new IllegalArgumentException("Session not found"));
         return orderService.placeOrder(session, items);
     }
 
-    @PutMapping("/update/{sessionCode}")
+    @PutMapping("/{sessionCode}")
     public OrderDTO addItemsToOrder(@PathVariable String sessionCode, @RequestBody List<OrderItemDTO> items) {
         Session session = sessionService.findByCode(sessionCode)
                 .orElseThrow(() -> new IllegalArgumentException("Session not found"));

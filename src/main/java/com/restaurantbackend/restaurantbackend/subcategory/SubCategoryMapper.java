@@ -1,4 +1,4 @@
-package com.restaurantbackend.restaurantbackend.category;
+package com.restaurantbackend.restaurantbackend.subcategory;
 
 import com.restaurantbackend.restaurantbackend.menu.MenuItemDTO;
 import com.restaurantbackend.restaurantbackend.menu.MenuMapper;
@@ -10,17 +10,17 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class CategoryMapper {
+public class SubCategoryMapper {
 
     private final MenuMapper menuMapper;
 
-    public CategoryDTO toDTO(Category category) {
-        CategoryDTO dto = new CategoryDTO();
-        dto.setId(category.getId());
-        dto.setName(category.getName());
+    public SubCategoryDTO toDTO(SubCategory subCategory) {
+        SubCategoryDTO dto = new SubCategoryDTO();
+        dto.setId(subCategory.getId());
+        dto.setName(subCategory.getName());
 
-        if (category.getMenuItems() != null) {
-            List<MenuItemDTO> menuItems = category.getMenuItems().stream()
+        if (subCategory.getMenuItems() != null) {
+            List<MenuItemDTO> menuItems = subCategory.getMenuItems().stream()
                     .map(menuMapper::toDTO)
                     .collect(Collectors.toList());
             dto.setMenuItems(menuItems);
@@ -29,14 +29,14 @@ public class CategoryMapper {
         return dto;
     }
 
-    public Category toEntity(CategoryDTO dto) {
-        Category category = new Category();
+    public SubCategory toEntity(SubCategoryDTO dto) {
+        SubCategory subCategory = new SubCategory();
 
         if (dto.getId() != null) {
-            category.setId(dto.getId());
+            subCategory.setId(dto.getId());
         }
 
-        category.setName(dto.getName());
+        subCategory.setName(dto.getName());
 
         if (dto.getMenuItems() != null) {
             List<MenuItemDTO> items = dto.getMenuItems();
@@ -45,13 +45,13 @@ public class CategoryMapper {
                 menuItem.setName(itemDTO.getName());
                 menuItem.setPrice(itemDTO.getPrice());
                 menuItem.setDescription(itemDTO.getDescription());
-                menuItem.setCategory(category);
+                menuItem.setSubCategory(subCategory);
                 return menuItem;
             }).collect(Collectors.toList());
 
-            category.setMenuItems(menuItems);
+            subCategory.setMenuItems(menuItems);
         }
 
-        return category;
+        return subCategory;
     }
 }
