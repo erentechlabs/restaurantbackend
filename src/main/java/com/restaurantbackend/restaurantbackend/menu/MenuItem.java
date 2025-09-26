@@ -24,4 +24,5 @@ public class MenuItem {
     @JoinColumn(name = "sub_category_id")
     @JsonIgnore
     private SubCategory subCategory;
+    
 }
