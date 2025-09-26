@@ -1,6 +1,7 @@
 package com.restaurantbackend.restaurantbackend.menu;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,27 +14,32 @@ public class MenuController {
     private final MenuService menuService;
 
     @GetMapping
-    public List<MenuItemDTO> getAllMenuItems() {
-        return menuService.getAllMenuItems();
+    public ResponseEntity<List<MenuItemDTO>> getAllMenuItems() {
+        List<MenuItemDTO> items = menuService.getAllMenuItems();
+        return ResponseEntity.ok(items);
     }
 
     @GetMapping("/{id}")
-    public MenuItemDTO getMenuItemById(@PathVariable Long id) {
-        return menuService.getMenuItemById(id);
+    public ResponseEntity<MenuItemDTO> getMenuItemById(@PathVariable Long id) {
+        MenuItemDTO item = menuService.getMenuItemById(id);
+        return ResponseEntity.ok(item);
     }
 
     @PostMapping
-    public MenuItemDTO addMenuItem(@RequestBody MenuItemDTO dto) {
-        return menuService.addMenuItem(dto);
+    public ResponseEntity<MenuItemDTO> addMenuItem(@RequestBody MenuItemDTO dto) {
+        MenuItemDTO created = menuService.addMenuItem(dto);
+        return ResponseEntity.ok(created);
     }
 
     @PutMapping("/{id}")
-    public MenuItemDTO updateMenuItem(@PathVariable Long id, @RequestBody MenuItemDTO dto) {
-        return menuService.updateMenuItem(id, dto);
+    public ResponseEntity<MenuItemDTO> updateMenuItem(@PathVariable Long id, @RequestBody MenuItemDTO dto) {
+        MenuItemDTO updated = menuService.updateMenuItem(id, dto);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteMenuItem(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteMenuItem(@PathVariable Long id) {
         menuService.deleteMenuItem(id);
+        return ResponseEntity.noContent().build();
     }
 }
