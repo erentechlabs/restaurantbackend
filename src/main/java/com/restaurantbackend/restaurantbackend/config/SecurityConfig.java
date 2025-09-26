@@ -24,7 +24,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/v1/sessions/start/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/orders/table/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/menu/all").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/menu/get").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/categories/all").permitAll()
                         .anyRequest().authenticated()
                 )
