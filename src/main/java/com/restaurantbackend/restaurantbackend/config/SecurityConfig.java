@@ -26,8 +26,11 @@ public class SecurityConfig {
                         /*
                         .requestMatchers(HttpMethod.POST, "/api/v1/sessions/start/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/orders/table/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/menu/get").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/categories/all").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/orders/table/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/menu").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/categories").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/categories/{categoryId}/subcategories/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/tables").permitAll()
                         .anyRequest().authenticated()
 
                          */
