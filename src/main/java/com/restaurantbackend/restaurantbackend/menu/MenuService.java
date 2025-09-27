@@ -6,69 +6,75 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class MenuService {
+
     private final MenuRepository menuRepository;
     private final SubCategoryRepository subCategoryRepository;
     private final MenuMapper menuMapper;
 
-    public List<MenuItemDTO> getAllMenuItems() {
-        return menuRepository.findAll().stream()
+    public List<MenuItemDTO> getAllMenuItems(Long categoryId, Long subCategoryId) {
+        SubCategory subCategory = subCategoryRepository.findById(subCategoryId)
+                .filter(sub -> sub.getCategory().getId().equals(categoryId))
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "SubCategory not found for categoryId=" + categoryId + " and subCategoryId=" + subCategoryId));
+
+        return subCategory.getMenuItems().stream()
                 .map(menuMapper::toDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    public MenuItemDTO getMenuItemById(Long id) {
+    public MenuItemDTO getMenuItemById(Long categoryId, Long subCategoryId, Long id) {
         return menuRepository.findById(id)
+                .filter(item -> item.getSubCategory().getId().equals(subCategoryId)
+                        && item.getSubCategory().getCategory().getId().equals(categoryId))
                 .map(menuMapper::toDTO)
-                .orElseThrow(() -> new IllegalArgumentException("MenuItem not found: " + id));
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "MenuItem not found for categoryId=" + categoryId +
+                                ", subCategoryId=" + subCategoryId + ", id=" + id));
     }
 
-    public MenuItemDTO addMenuItem(MenuItemDTO dto) {
-        MenuItem menuItem = new MenuItem();
-        menuItem.setName(dto.getName());
-        menuItem.setPrice(dto.getPrice());
-        menuItem.setDescription(dto.getDescription());
+    public MenuItemDTO addMenuItem(Long categoryId, Long subCategoryId, MenuItemDTO dto) {
+        SubCategory subCategory = subCategoryRepository.findById(subCategoryId)
+                .filter(sub -> sub.getCategory().getId().equals(categoryId))
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "SubCategory not found for categoryId=" + categoryId + " and subCategoryId=" + subCategoryId));
 
-        if (dto.getSubCategoryName() != null) {
-            SubCategory subCategory = subCategoryRepository.findByName(dto.getSubCategoryName())
-                    .orElseGet(() -> {
-                        SubCategory newCat = new SubCategory();
-                        newCat.setName(dto.getSubCategoryName());
-                        return subCategoryRepository.save(newCat);
-                    });
-            menuItem.setSubCategory(subCategory);
-        }
+        MenuItem menuItem = menuMapper.toEntity(dto);
+        menuItem.setSubCategory(subCategory);
 
         MenuItem saved = menuRepository.save(menuItem);
         return menuMapper.toDTO(saved);
     }
 
-    public MenuItemDTO updateMenuItem(Long id, MenuItemDTO dto) {
+    public MenuItemDTO updateMenuItem(Long categoryId, Long subCategoryId, Long id, MenuItemDTO dto) {
         MenuItem existing = menuRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("MenuItem not found: " + id));
+                .filter(item -> item.getSubCategory().getId().equals(subCategoryId)
+                        && item.getSubCategory().getCategory().getId().equals(categoryId))
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "MenuItem not found for categoryId=" + categoryId +
+                                ", subCategoryId=" + subCategoryId + ", id=" + id));
 
         if (dto.getName() != null) existing.setName(dto.getName());
         if (dto.getDescription() != null) existing.setDescription(dto.getDescription());
-        existing.setPrice(dto.getPrice());
-
-        if (dto.getSubCategoryName() != null) {
-            SubCategory subCategory = subCategoryRepository.findByName(dto.getSubCategoryName())
-                    .orElseGet(() -> {
-                        SubCategory newCat = new SubCategory();
-                        newCat.setName(dto.getSubCategoryName());
-                        return subCategoryRepository.save(newCat);
-                    });
-            existing.setSubCategory(subCategory);
-        }
+        if (dto.getPrice() != 0) existing.setPrice(dto.getPrice());
+        existing.setAvailable(dto.isAvailable());
+        if (dto.getImageUrl() != null) existing.setImageUrl(dto.getImageUrl());
 
         MenuItem saved = menuRepository.save(existing);
         return menuMapper.toDTO(saved);
     }
 
-    public void deleteMenuItem(Long id) {
-        menuRepository.deleteById(id);
+    public void deleteMenuItem(Long categoryId, Long subCategoryId, Long id) {
+        MenuItem existing = menuRepository.findById(id)
+                .filter(item -> item.getSubCategory().getId().equals(subCategoryId)
+                        && item.getSubCategory().getCategory().getId().equals(categoryId))
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "MenuItem not found for categoryId=" + categoryId +
+                                ", subCategoryId=" + subCategoryId + ", id=" + id));
+
+        menuRepository.delete(existing);
     }
 }

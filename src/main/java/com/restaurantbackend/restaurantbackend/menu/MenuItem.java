@@ -10,7 +10,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@jakarta.persistence.Table(name = "menu_item")
+@Table(name = "menu_item")
 public class MenuItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,5 +24,8 @@ public class MenuItem {
     @JoinColumn(name = "sub_category_id")
     @JsonIgnore
     private SubCategory subCategory;
+
+    private boolean isAvailable;
+    private String imageUrl;
     
 }

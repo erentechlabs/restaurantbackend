@@ -8,5 +8,6 @@ public class MenuItemDTO {
     private String name;
     private double price;
     private String description;
-    private String subCategoryName;
+    private boolean isAvailable;
+    private String imageUrl;
 }

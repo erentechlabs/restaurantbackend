@@ -14,9 +14,16 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<CategoryDTO> createCategory(@RequestBody CategoryDTO dto) {
-        CategoryDTO created = categoryService.addCategory(dto);
+    public ResponseEntity<List<CategoryDTO>> createCategories(@RequestBody List<CategoryDTO> dtos) {
+        dtos.forEach(dto -> dto.setSubCategories(null));
+        List<CategoryDTO> created = categoryService.addCategories(dtos);
         return ResponseEntity.ok(created);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable Long id) {
+        CategoryDTO category = categoryService.getCategoryById(id);
+        return ResponseEntity.ok(category);
     }
 
     @GetMapping
@@ -24,8 +31,10 @@ public class CategoryController {
         List<CategoryDTO> categories = categoryService.getAllCategories();
         return ResponseEntity.ok(categories);
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<CategoryDTO> updateCategory(@PathVariable Long id, @RequestBody CategoryDTO dto) {
+        dto.setSubCategories(null);
         CategoryDTO updated = categoryService.updateCategory(id, dto);
         return ResponseEntity.ok(updated);
     }

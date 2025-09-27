@@ -19,23 +19,32 @@ public class CategoryService {
                 .toList();
     }
 
-    @Transactional
-    public CategoryDTO addCategory(CategoryDTO dto) {
-        Category category = categoryMapper.toEntity(dto);
-
-        if (category.getSubCategories() != null) {
-            category.getSubCategories().forEach(sub -> sub.setCategory(category));
-        }
-
-        Category saved = categoryRepository.save(category);
-        return categoryMapper.toDTO(saved);
+    public CategoryDTO getCategoryById(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found"));
+        return categoryMapper.toDTO(category);
     }
-    
+
+    @Transactional
+    public List<CategoryDTO> addCategories(List<CategoryDTO> dtos) {
+        List<Category> categories = dtos.stream()
+                .map(categoryMapper::toEntity)
+                .toList();
+
+        List<Category> savedCategories = categoryRepository.saveAll(categories);
+
+        return savedCategories.stream()
+                .map(categoryMapper::toDTO)
+                .toList();
+    }
+
     @Transactional
     public CategoryDTO updateCategory(Long id, CategoryDTO dto) {
         Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found"));
+
         category.setName(dto.getName());
+
         Category updated = categoryRepository.save(category);
         return categoryMapper.toDTO(updated);
     }

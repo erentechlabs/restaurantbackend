@@ -16,6 +16,7 @@ public class CategoryMapper {
         CategoryDTO dto = new CategoryDTO();
         dto.setId(category.getId());
         dto.setName(category.getName());
+
         if (category.getSubCategories() != null) {
             dto.setSubCategories(
                     category.getSubCategories().stream()
@@ -23,6 +24,7 @@ public class CategoryMapper {
                             .collect(Collectors.toList())
             );
         }
+
         return dto;
     }
 
@@ -30,13 +32,6 @@ public class CategoryMapper {
         Category category = new Category();
         category.setId(dto.getId());
         category.setName(dto.getName());
-        if (dto.getSubCategories() != null) {
-            category.setSubCategories(
-                    dto.getSubCategories().stream()
-                            .map(subCategoryMapper::toEntity)
-                            .collect(Collectors.toList())
-            );
-        }
         return category;
     }
 }

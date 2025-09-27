@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@jakarta.persistence.Table(name = "sub_category")
+@Table(name = "sub_category")
 public class SubCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

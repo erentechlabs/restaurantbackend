@@ -20,18 +20,22 @@ public class SubCategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SubCategoryDTO> getSubCategoryById(@PathVariable Long categoryId, @PathVariable Long id) {
+    public ResponseEntity<SubCategoryDTO> getSubCategoryById(@PathVariable Long categoryId,
+                                                             @PathVariable Long id) {
         return subCategoryService.getSubCategoryById(categoryId, id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
+
     @PostMapping
-    public ResponseEntity<SubCategoryDTO> createSubCategory(
+    public ResponseEntity<List<SubCategoryDTO>> createSubCategories(
             @PathVariable Long categoryId,
-            @RequestBody SubCategoryDTO dto
+            @RequestBody List<SubCategoryDTO> dtos
     ) {
-        SubCategoryDTO created = subCategoryService.createSubCategory(categoryId, dto);
+
+        dtos.forEach(dto -> dto.setMenuItems(null));
+        List<SubCategoryDTO> created = subCategoryService.createSubCategories(categoryId, dtos);
         return ResponseEntity.ok(created);
     }
 
@@ -41,13 +45,16 @@ public class SubCategoryController {
             @PathVariable Long id,
             @RequestBody SubCategoryDTO dto
     ) {
+
+        dto.setMenuItems(null);
         return subCategoryService.updateSubCategory(categoryId, id, dto)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSubCategory(@PathVariable Long categoryId, @PathVariable Long id) {
+    public ResponseEntity<Void> deleteSubCategory(@PathVariable Long categoryId,
+                                                  @PathVariable Long id) {
         return subCategoryService.deleteSubCategory(categoryId, id)
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
