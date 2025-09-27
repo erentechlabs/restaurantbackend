@@ -39,7 +39,7 @@ Built with **Spring Boot** and provides a RESTful API for all interactions.
 
 1. **Clone the repository:**
         ```bash
-        git clone <your-repository-url>
+        git clone https://github.com/erentechlabs/restaurantbackend
         cd restaurantbackend
         ```
 
@@ -65,42 +65,44 @@ Built with **Spring Boot** and provides a RESTful API for all interactions.
 
 ---
 
-## REST API Endpoint Map
+
+## REST API Endpoint Reference
 
 ### Table Endpoints (`/api/v1/tables`)
-- `GET /all` — Get all tables
-- `POST /add` — Add a new table
-- `PUT /update/{id}` — Update a table by ID
-- `DELETE /delete/{id}` — Delete a table by ID
+- `GET /` — Get all tables. Returns a list of all tables in the restaurant.
+- `POST /` — Add a new table. Request body: `TableDTO`.
+- `PUT /update/{id}` — Update a table by ID. Request body: `TableDTO`.
+- `DELETE /delete/{id}` — Delete a table by ID.
 
 ### Category Endpoints (`/api/v1/categories`)
-- `POST /` — Create a new category (with nested subcategories and menu items)
-- `GET /` — Get all categories
-- `PUT /{id}` — Update a category (with nested subcategories and menu items)
-- `DELETE /{id}` — Delete a category
+- `POST /` — Create a new category (with nested subcategories and menu items). Request body: `CategoryDTO` (see example below).
+- `GET /` — Get all categories. Returns a list of all categories.
+- `PUT /{id}` — Update a category (with nested subcategories and menu items). Request body: `CategoryDTO`.
+- `DELETE /{id}` — Delete a category by ID.
 
 ### SubCategory Endpoints (`/api/v1/categories/{categoryId}/subcategories`)
-- `GET /` — Get all subcategories for a category
-- `GET /{id}` — Get a subcategory by ID
-- `POST /` — Create a new subcategory
-- `PUT /{id}` — Update a subcategory by ID
-- `DELETE /{id}` — Delete a subcategory by ID
+- `GET /` — Get all subcategories for a category. Returns a list of subcategories for the given category.
+- `GET /{id}` — Get a subcategory by ID.
+- `POST /` — Create a new subcategory. Request body: `SubCategoryDTO`.
+- `PUT /{id}` — Update a subcategory by ID. Request body: `SubCategoryDTO`.
+- `DELETE /{id}` — Delete a subcategory by ID.
 
 ### Menu Endpoints (`/api/v1/menu`)
-- `GET /` — Get all menu items
-- `GET /{id}` — Get a menu item by ID
-- `POST /` — Create a new menu item
-- `PUT /{id}` — Update a menu item by ID
-- `DELETE /{id}` — Delete a menu item by ID
+- `GET /` — Get all menu items. Returns a list of all menu items.
+- `GET /{id}` — Get a menu item by ID.
+- `POST /` — Create a new menu item. Request body: `MenuItemDTO`.
+- `PUT /{id}` — Update a menu item by ID. Request body: `MenuItemDTO`.
+- `DELETE /{id}` — Delete a menu item by ID.
 
 ### Order Endpoints (`/api/v1/orders/table`)
-- `POST /{sessionCode}` — Create a new order for a session
-- `PUT /{sessionCode}` — Update an order for a session
-- `PUT /{orderId}/item/{oldItemName}` — Update an item in an order
+- `POST /{sessionCode}` — Create a new order for a session. Request body: `List<OrderItemDTO>`.
+- `PUT /{sessionCode}` — Update an order for a session. Request body: `List<OrderItemDTO>`.
+- `PUT /{orderId}/item/{oldItemName}` — Update an item in an order. Request body: `OrderItemDTO`.
 
 ### Session Endpoints (`/api/v1/sessions`)
-- `GET /` — Get all sessions
-- `POST /start/{nfctagCode}` — Start a session by NFC tag code
-- `POST /close/{nfctagCode}` — Close a session by NFC tag code
+- `GET /` — Get all active sessions. Returns a list of active sessions.
+- `POST /start/{nfctagCode}` — Start a session by NFC tag code. Returns the created session.
+- `POST /close/{nfctagCode}` — Close a session by NFC tag code.
+- `POST /start-and-order/{nfctagCode}` — Start a session and place an order at the same time. Request body: `List<OrderItemDTO>`. Returns the created order.
 
 ---
