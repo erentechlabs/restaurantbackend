@@ -8,20 +8,20 @@ import com.restaurantbackend.restaurantbackend.entity.table.enums.TableStatus;
 import com.restaurantbackend.restaurantbackend.mapper.table.TableSessionMapper;
 import com.restaurantbackend.restaurantbackend.repository.table.TableRepository;
 import com.restaurantbackend.restaurantbackend.repository.table.TableSessionRepository;
+import com.restaurantbackend.restaurantbackend.util.PasswordGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
+
 @Service
 public class SessionService {
 
     private final TableRepository tableRepository;
-
     private final TableSessionRepository sessionRepository;
-
     private final TableSessionMapper sessionMapper;
+    PasswordGenerator passwordGenerator = new PasswordGenerator();
 
     public SessionService(TableRepository tableRepository, TableSessionRepository sessionRepository, TableSessionMapper sessionMapper) {
         this.tableRepository = tableRepository;
@@ -31,15 +31,13 @@ public class SessionService {
 
     @Transactional
     public TableSessionDTO startSession(Long tableId, StartSessionDTO dto) {
-        Optional<Table> optTable = tableRepository.findById(tableId);
-        if (optTable.isEmpty()) {
-            throw new RuntimeException("Masa bulunamadı");
-        }
-        Table table = optTable.get();
+        Table table = tableRepository.findById(tableId)
+                .orElseThrow(() -> new RuntimeException("Masa bulunamadı"));
 
         if (!table.getNextPassword().equals(dto.getPassword())) {
             throw new RuntimeException("Şifre hatalı");
         }
+
 
         endCurrentSession(tableId);
 
@@ -51,30 +49,26 @@ public class SessionService {
         session = sessionRepository.save(session);
 
         table.setStatus(TableStatus.OCCUPIED);
-        table.setCurrentSession(session);
-        table.setNextPassword(generatePassword());
         tableRepository.save(table);
 
         return sessionMapper.toDTO(session);
     }
 
-
     @Transactional
     public void endSession(Long tableId) {
         endCurrentSession(tableId);
-        Optional<Table> optTable = tableRepository.findById(tableId);
-        if (optTable.isPresent()) {
-            Table table = optTable.get();
-            table.setStatus(TableStatus.FREE);
-            table.setCurrentSession(null);
-            table.setNextPassword(generatePassword());
-            tableRepository.save(table);
-        }
+
+        Table table = tableRepository.findById(tableId)
+                .orElseThrow(() -> new RuntimeException("Masa bulunamadı"));
+
+        table.setStatus(TableStatus.FREE);
+        table.setNextPassword(passwordGenerator.generateNumericPassword());
+        tableRepository.save(table);
     }
 
-
     public Optional<TableSessionDTO> getCurrentSession(Long tableId) {
-        return sessionRepository.findByTableIdAndActiveTrue(tableId).map(sessionMapper::toDTO);
+        return sessionRepository.findByTableIdAndActiveTrue(tableId)
+                .map(sessionMapper::toDTO);
     }
 
     private void endCurrentSession(Long tableId) {
@@ -85,7 +79,4 @@ public class SessionService {
         });
     }
 
-    private String generatePassword() {
-        return UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-    }
 }

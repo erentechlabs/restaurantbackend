@@ -34,7 +34,7 @@ public class TableSession {
     private boolean active = true;
 
     @OneToOne
-    @JoinColumn(name = "table_id", nullable = false, unique = true)
+    @JoinColumn(name = "table_id", nullable = false)
     private Table table;
 
     @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, orphanRemoval = true)

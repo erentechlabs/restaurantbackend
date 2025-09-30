@@ -36,7 +36,6 @@ public class TableMapper {
         }
         Table table = new Table();
         table.setTableNumber(dto.getTableNumber());
-        // Status ve nextPassword service'te set edilir
         return table;
     }
 

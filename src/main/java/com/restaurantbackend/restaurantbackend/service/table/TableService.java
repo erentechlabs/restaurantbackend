@@ -8,12 +8,12 @@ import com.restaurantbackend.restaurantbackend.entity.table.Table;
 import com.restaurantbackend.restaurantbackend.entity.table.enums.TableStatus;
 import com.restaurantbackend.restaurantbackend.mapper.table.TableMapper;
 import com.restaurantbackend.restaurantbackend.repository.table.TableRepository;
+import com.restaurantbackend.restaurantbackend.util.PasswordGenerator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 
 @Service
@@ -22,6 +22,7 @@ public class TableService {
     private final TableRepository tableRepository;
 
     private final TableMapper tableMapper;
+    PasswordGenerator passwordGenerator = new PasswordGenerator();
 
     public TableService(TableRepository tableRepository, TableMapper tableMapper) {
         this.tableRepository = tableRepository;
@@ -32,7 +33,7 @@ public class TableService {
     public TableDTO createTable(CreateTableDTO dto) {
         try {
             Table table = tableMapper.toEntity(dto);
-            table.setNextPassword(generatePassword());
+            table.setNextPassword(passwordGenerator.generateNumericPassword());
             table.setStatus(TableStatus.FREE);
             table = tableRepository.save(table);
             return tableMapper.toDTO(table);
@@ -50,20 +51,16 @@ public class TableService {
     }
 
     public String getNextPassword(Long tableId) {
-        Optional<Table> optTable = tableRepository.findById(tableId);
-        if (optTable.isEmpty()) {
-            throw new RuntimeException("Masa bulunamadı");
-        }
-        return optTable.get().getNextPassword();
+        Table table = tableRepository.findById(tableId)
+                .orElseThrow(() -> new RuntimeException("Masa bulunamadı"));
+        return table.getNextPassword();
     }
 
     @Transactional
     public TableDTO updateTable(Long id, TableUpdateDTO dto) {
-        Optional<Table> optTable = tableRepository.findById(id);
-        if (optTable.isEmpty()) {
-            throw new RuntimeException("Masa bulunamadı");
-        }
-        Table table = optTable.get();
+        Table table = tableRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Masa bulunamadı"));
+
         tableMapper.updateEntityFromDTO(table, dto);
         table = tableRepository.save(table);
         return tableMapper.toDTO(table);
@@ -71,14 +68,8 @@ public class TableService {
 
     @Transactional
     public void deleteTable(Long id) {
-        Optional<Table> optTable = tableRepository.findById(id);
-        if (optTable.isEmpty()) {
-            throw new RuntimeException("Masa bulunamadı");
-        }
+        Table table = tableRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Masa bulunamadı"));
         tableRepository.deleteById(id);
-    }
-
-    private String generatePassword() {
-        return UUID.randomUUID().toString().substring(0, 8).toUpperCase();
     }
 }

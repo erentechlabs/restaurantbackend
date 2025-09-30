@@ -30,7 +30,7 @@ public class Table {
     @Column(name = "next_password", nullable = false)
     private String nextPassword;
 
-    @OneToOne(mappedBy = "table", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "table")
     @JsonIgnore
     private TableSession currentSession;
 }

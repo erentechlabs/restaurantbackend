@@ -6,6 +6,9 @@ import com.restaurantbackend.restaurantbackend.service.session.SessionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/sessions")
 public class SessionController {
@@ -17,12 +20,14 @@ public class SessionController {
     }
 
     @PostMapping("/tables/{tableId}/start")
-    public ResponseEntity<TableSessionDTO> startSession(@PathVariable Long tableId, @RequestBody StartSessionDTO dto) {
+    public ResponseEntity<?> startSession(@PathVariable Long tableId, @RequestBody StartSessionDTO dto) {
         try {
             TableSessionDTO session = sessionService.startSession(tableId, dto);
             return ResponseEntity.ok(session);
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().build();
+            Map<String, String> error = new HashMap<>();
+            error.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(error);
         }
     }
 
