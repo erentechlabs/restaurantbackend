@@ -108,13 +108,13 @@ All endpoints are prefixed with `/api/v1`.
 
 ### Order Endpoints (`/orders/table`)
 
-- `POST /{sessionCode}` — Create a new order for a session. Request body: `List<OrderItemDTO>`.
-- `PUT /{sessionCode}` — Add new items to an existing order in a session. Request body: `List<OrderItemDTO>`.
-- `PUT /{orderId}/item/{oldItemName}` — Update a specific item in an order. Request body: `OrderItemDTO`.
+- `POST /{sessionCode}` — Create a new restaurantOrder for a session. Request body: `List<OrderItemDTO>`.
+- `PUT /{sessionCode}` — Add new items to an existing restaurantOrder in a session. Request body: `List<OrderItemDTO>`.
+- `PUT /{orderId}/item/{oldItemName}` — Update a specific item in an restaurantOrder. Request body: `OrderItemDTO`.
 
 ### Session Endpoints (`/sessions`)
 
 - `GET /` — Get all active sessions.
 - `POST /start/{nfctagCode}` — Start a session with an NFC tag code.
 - `POST /close/{sessionCode}` — Close a session with a session code.
-- `POST /start-and-order/{nfctagCode}` — Start a session and create an order simultaneously. Request body: `List<OrderItemDTO>`.
+- `POST /start-and-restaurantOrder/{nfctagCode}` — Start a session and create an restaurantOrder simultaneously. Request body: `List<OrderItemDTO>`.
