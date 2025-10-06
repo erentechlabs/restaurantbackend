@@ -1,6 +1,7 @@
 package com.restaurantbackend.restaurantbackend.entity.menu;
 
 
+import com.restaurantbackend.restaurantbackend.entity.table.Table;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +13,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "restaurant")
+@jakarta.persistence.Table(name = "restaurant")
 public class Restaurant {
 
     @Id
@@ -23,4 +24,7 @@ public class Restaurant {
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
     private List<Category> categories;
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    private List<Table> tables;
 }

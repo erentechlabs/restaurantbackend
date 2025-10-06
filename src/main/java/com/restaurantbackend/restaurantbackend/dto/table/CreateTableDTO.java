@@ -5,4 +5,5 @@ import lombok.Data;
 @Data
 public class CreateTableDTO {
     private Integer tableNumber;
+    private Long restaurantId;
 }

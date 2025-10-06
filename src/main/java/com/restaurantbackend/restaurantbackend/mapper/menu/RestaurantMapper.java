@@ -3,6 +3,7 @@ package com.restaurantbackend.restaurantbackend.mapper.menu;
 import com.restaurantbackend.restaurantbackend.dto.menu.RestaurantDTO;
 import com.restaurantbackend.restaurantbackend.dto.menu.RestaurantRequestDTO;
 import com.restaurantbackend.restaurantbackend.entity.menu.Restaurant;
+import com.restaurantbackend.restaurantbackend.mapper.table.TableMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 public class RestaurantMapper {
 
     private final CategoryMapper categoryMapper;
+    private final TableMapper tableMapper;
 
     public RestaurantDTO toDTO(Restaurant subcategory) {
         if (subcategory == null) return null;
@@ -24,6 +26,10 @@ public class RestaurantMapper {
                     .stream()
                     .map(categoryMapper::toDTO)
                     .collect(Collectors.toList()));
+        }
+
+        if(tableMapper != null) {
+            restaurantDTO.setTables(tableMapper.toDTOList(subcategory.getTables()));
         }
         return restaurantDTO;
     }

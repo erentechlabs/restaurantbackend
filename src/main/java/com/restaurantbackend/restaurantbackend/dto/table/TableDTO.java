@@ -8,4 +8,5 @@ public class TableDTO {
     private Long id;
     private Integer tableNumber;
     private TableStatus status;
+    private Long restaurantId;
 }

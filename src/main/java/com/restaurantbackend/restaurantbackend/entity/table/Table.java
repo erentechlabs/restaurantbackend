@@ -1,6 +1,7 @@
 package com.restaurantbackend.restaurantbackend.entity.table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.restaurantbackend.restaurantbackend.entity.menu.Restaurant;
 import com.restaurantbackend.restaurantbackend.entity.session.TableSession;
 import com.restaurantbackend.restaurantbackend.entity.table.enums.TableStatus;
 import jakarta.persistence.*;
@@ -12,7 +13,12 @@ import lombok.AllArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@jakarta.persistence.Table(name = "restaurant_table")
+@jakarta.persistence.Table(
+        name = "restaurant_table",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = {"restaurant_id", "table_number"})
+        }
+)
 public class Table {
 
     @Id
@@ -20,7 +26,7 @@ public class Table {
     @SequenceGenerator(name = "table_seq", sequenceName = "restaurant_table_id_seq", allocationSize = 1)
     private Long id;
 
-    @Column(name = "table_number", unique = true)
+    @Column(name = "table_number")
     private Integer tableNumber;
 
     @Enumerated(EnumType.STRING)
@@ -33,4 +39,8 @@ public class Table {
     @OneToOne(mappedBy = "table")
     @JsonIgnore
     private TableSession currentSession;
+
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id")
+    private Restaurant restaurant;
 }

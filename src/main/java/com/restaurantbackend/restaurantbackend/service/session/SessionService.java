@@ -9,6 +9,7 @@ import com.restaurantbackend.restaurantbackend.mapper.table.TableSessionMapper;
 import com.restaurantbackend.restaurantbackend.repository.table.TableRepository;
 import com.restaurantbackend.restaurantbackend.repository.table.TableSessionRepository;
 import com.restaurantbackend.restaurantbackend.util.PasswordGenerator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class SessionService {
 
     private final TableRepository tableRepository;
@@ -23,19 +25,13 @@ public class SessionService {
     private final TableSessionMapper sessionMapper;
     PasswordGenerator passwordGenerator = new PasswordGenerator();
 
-    public SessionService(TableRepository tableRepository, TableSessionRepository sessionRepository, TableSessionMapper sessionMapper) {
-        this.tableRepository = tableRepository;
-        this.sessionRepository = sessionRepository;
-        this.sessionMapper = sessionMapper;
-    }
-
     @Transactional
     public TableSessionDTO startSession(Long tableId, StartSessionDTO dto) {
         Table table = tableRepository.findById(tableId)
-                .orElseThrow(() -> new RuntimeException("Masa bulunamadı"));
+                .orElseThrow(() -> new RuntimeException("Table not found"));
 
         if (!table.getNextPassword().equals(dto.getPassword())) {
-            throw new RuntimeException("Şifre hatalı");
+            throw new RuntimeException("Password is incorrect");
         }
 
 
@@ -59,7 +55,7 @@ public class SessionService {
         endCurrentSession(tableId);
 
         Table table = tableRepository.findById(tableId)
-                .orElseThrow(() -> new RuntimeException("Masa bulunamadı"));
+                .orElseThrow(() -> new RuntimeException("Table not found with id: " + tableId + ""));
 
         table.setStatus(TableStatus.FREE);
         table.setNextPassword(passwordGenerator.generateNumericPassword());

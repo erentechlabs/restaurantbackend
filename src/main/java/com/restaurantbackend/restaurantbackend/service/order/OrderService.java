@@ -10,11 +10,13 @@ import com.restaurantbackend.restaurantbackend.mapper.order.RestaurantOrderMappe
 import com.restaurantbackend.restaurantbackend.repository.order.RestaurantOrderRepository;
 import com.restaurantbackend.restaurantbackend.repository.menu.MenuItemRepository;
 import com.restaurantbackend.restaurantbackend.repository.table.TableSessionRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class OrderService {
 
 
@@ -26,32 +28,25 @@ public class OrderService {
 
     private final RestaurantOrderMapper orderMapper;
 
-    public OrderService(RestaurantOrderRepository orderRepository, TableSessionRepository sessionRepository, MenuItemRepository menuItemRepository, RestaurantOrderMapper orderMapper) {
-        this.orderRepository = orderRepository;
-        this.sessionRepository = sessionRepository;
-        this.menuItemRepository = menuItemRepository;
-        this.orderMapper = orderMapper;
-    }
-
     @Transactional
     public RestaurantOrderDTO addOrderToSession(Long sessionId, AddOrderDTO dto) {
 
         if (dto.getMenuItemId() == null || dto.getQuantity() <= 0) {
-            throw new IllegalArgumentException("MenuItem ID ve quantity zorunlu ve quantity > 0 olmalı");
+            throw new IllegalArgumentException("MenuItem ID and quantity should be bigger than zero");
         }
 
         TableSession session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new RuntimeException("Aktif oturum bulunamadı: " + sessionId));
+                .orElseThrow(() -> new RuntimeException("Active session not found: " + sessionId));
 
         if (!session.isActive()) {
-            throw new RuntimeException("Oturum aktif değil: " + sessionId);
+            throw new RuntimeException("Session not active: " + sessionId);
         }
 
         MenuItem menuItem = menuItemRepository.findById(dto.getMenuItemId())
-                .orElseThrow(() -> new RuntimeException("MenuItem bulunamadı: " + dto.getMenuItemId()));
+                .orElseThrow(() -> new RuntimeException("MenuItem not found: " + dto.getMenuItemId()));
 
         if (!menuItem.isAvailable()) {
-            throw new RuntimeException("MenuItem mevcut değil: " + menuItem.getName());
+            throw new RuntimeException("MenuItem not found: " + menuItem.getName());
         }
 
         RestaurantOrder order = orderMapper.toEntity(new RestaurantOrderDTO(), menuItem, session);
@@ -64,14 +59,14 @@ public class OrderService {
 
     public List<RestaurantOrderDTO> getOrdersForSession(Long sessionId) {
         TableSession session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new RuntimeException("Oturum bulunamadı"));
+                .orElseThrow(() -> new RuntimeException("Session not found: " + sessionId + ""));
         return orderMapper.toDTOList(session.getOrders());
     }
 
     @Transactional
     public void deleteOrder(Long orderId) {
         if (!orderRepository.existsById(orderId)) {
-            throw new RuntimeException("Sipariş bulunamadı");
+            throw new RuntimeException("Order not found: " + orderId + "");
         }
         orderRepository.deleteById(orderId);
     }

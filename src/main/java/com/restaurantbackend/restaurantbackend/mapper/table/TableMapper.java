@@ -20,6 +20,7 @@ public class TableMapper {
         dto.setId(table.getId());
         dto.setTableNumber(table.getTableNumber());
         dto.setStatus(table.getStatus());
+        dto.setRestaurantId(table.getRestaurant() != null ? table.getRestaurant().getId() : null);
         return dto;
     }
 
