@@ -49,11 +49,11 @@ public class SubcategoryService {
     }
 
     public SubcategoryDTO updateSubcategory(Long id, SubcategoryRequestDTO subcategoryRequestDTO) {
-        Subcategory subcategory = subcategoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Subcategory not found with id: " + id));
-
         Category category = categoryRepository.findById(subcategoryRequestDTO.getCategoryId())
                 .orElseThrow(() -> new RuntimeException("Category not found with id: " + subcategoryRequestDTO.getCategoryId()));
+
+        Subcategory subcategory = subcategoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Subcategory not found with id: " + id));
 
         subcategory.setName(subcategoryRequestDTO.getName());
         subcategory.setCategory(category);

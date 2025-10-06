@@ -1,12 +1,11 @@
 package com.restaurantbackend.restaurantbackend.dto.menu;
 
 import lombok.Data;
+
 import java.util.List;
 
 @Data
-public class CategoryDTO {
-    private Long id;
+public class RestaurantDTO {
     private String name;
-    private Long restaurantId;
-    private List<SubcategoryDTO> subcategories;
+    private List<CategoryDTO> categories;
 }
