@@ -59,14 +59,14 @@ public class OrderService {
 
     public List<RestaurantOrderDTO> getOrdersForSession(Long sessionId) {
         TableSession session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new RuntimeException("Session not found: " + sessionId + ""));
+                .orElseThrow(() -> new RuntimeException("Session not found: " + sessionId));
         return orderMapper.toDTOList(session.getOrders());
     }
 
     @Transactional
     public void deleteOrder(Long orderId) {
         if (!orderRepository.existsById(orderId)) {
-            throw new RuntimeException("Order not found: " + orderId + "");
+            throw new RuntimeException("Order not found: " + orderId);
         }
         orderRepository.deleteById(orderId);
     }

@@ -55,7 +55,7 @@ public class SessionService {
         endCurrentSession(tableId);
 
         Table table = tableRepository.findById(tableId)
-                .orElseThrow(() -> new RuntimeException("Table not found with id: " + tableId + ""));
+                .orElseThrow(() -> new RuntimeException("Table not found with id: " + tableId));
 
         table.setStatus(TableStatus.FREE);
         table.setNextPassword(passwordGenerator.generateNumericPassword());

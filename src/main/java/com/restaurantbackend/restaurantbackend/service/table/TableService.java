@@ -54,7 +54,7 @@ public class TableService {
 
     public String getNextPassword(Long tableId) {
         Table table = tableRepository.findById(tableId)
-                .orElseThrow(() -> new RuntimeException("Table not found with id: " + tableId + ""));
+                .orElseThrow(() -> new RuntimeException("Table not found with id: " + tableId));
         return table.getNextPassword();
     }
 
