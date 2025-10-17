@@ -1,4 +1,4 @@
-# Restaurant Backend
+                     # Restaurant Backend
 
 A robust RESTful API backend application for restaurant management built with Spring Boot, featuring menu management, table management, order processing, and session tracking.
 
@@ -18,29 +18,29 @@ A robust RESTful API backend application for restaurant management built with Sp
 ## ✨ Features
 
 - **Menu Management**
-  - Restaurant management
-  - Category and subcategory organization
-  - Menu item CRUD operations
+    - Restaurant management
+    - Category and subcategory organization
+    - Menu item CRUD operations
 
 - **Table Management**
-  - Table creation and management
-  - Table status tracking
+    - Table creation and management
+    - Table status tracking
 
 - **Session Management**
-  - Customer session tracking
-  - Table session association
+    - Customer session tracking
+    - Table session association
 
 - **Order Management**
-  - Order creation and processing
-  - Order tracking
+    - Order creation and processing
+    - Order tracking
 
 - **Security**
-  - Spring Security integration
-  - RESTful API protection
+    - Spring Security integration
+    - RESTful API protection
 
 - **API Documentation**
-  - Interactive Swagger UI
-  - OpenAPI 3.0 specification
+    - Interactive Swagger UI
+    - OpenAPI 3.0 specification
 
 ## 🛠 Technologies
 
@@ -77,7 +77,7 @@ Before running this application, make sure you have the following installed:
    ```
 
 3. **Configure Database Credentials**
-   
+
    Update the database credentials in `src/main/resources/application.properties`:
    ```properties
    spring.datasource.url=jdbc:postgresql://localhost:5432/restaurantbackend
@@ -238,32 +238,32 @@ restaurantbackend/
 ### Menu Management
 
 - **Restaurants**
-  - `GET /api/restaurants` - Get all restaurants
-  - `GET /api/restaurants/{id}` - Get restaurant by ID
-  - `POST /api/restaurants` - Create restaurant
-  - `PUT /api/restaurants/{id}` - Update restaurant
-  - `DELETE /api/restaurants/{id}` - Delete restaurant
+    - `GET /api/restaurants` - Get all restaurants
+    - `GET /api/restaurants/{id}` - Get restaurant by ID
+    - `POST /api/restaurants` - Create restaurant
+    - `PUT /api/restaurants/{id}` - Update restaurant
+    - `DELETE /api/restaurants/{id}` - Delete restaurant
 
 - **Categories**
-  - `GET /api/categories` - Get all categories
-  - `GET /api/categories/{id}` - Get category by ID
-  - `POST /api/categories` - Create category
-  - `PUT /api/categories/{id}` - Update category
-  - `DELETE /api/categories/{id}` - Delete category
+    - `GET /api/categories` - Get all categories
+    - `GET /api/categories/{id}` - Get category by ID
+    - `POST /api/categories` - Create category
+    - `PUT /api/categories/{id}` - Update category
+    - `DELETE /api/categories/{id}` - Delete category
 
 - **Subcategories**
-  - `GET /api/subcategories` - Get all subcategories
-  - `GET /api/subcategories/{id}` - Get subcategory by ID
-  - `POST /api/subcategories` - Create subcategory
-  - `PUT /api/subcategories/{id}` - Update subcategory
-  - `DELETE /api/subcategories/{id}` - Delete subcategory
+    - `GET /api/subcategories` - Get all subcategories
+    - `GET /api/subcategories/{id}` - Get subcategory by ID
+    - `POST /api/subcategories` - Create subcategory
+    - `PUT /api/subcategories/{id}` - Update subcategory
+    - `DELETE /api/subcategories/{id}` - Delete subcategory
 
 - **Menu Items**
-  - `GET /api/menu-items` - Get all menu items
-  - `GET /api/menu-items/{id}` - Get menu item by ID
-  - `POST /api/menu-items` - Create menu item
-  - `PUT /api/menu-items/{id}` - Update menu item
-  - `DELETE /api/menu-items/{id}` - Delete menu item
+    - `GET /api/menu-items` - Get all menu items
+    - `GET /api/menu-items/{id}` - Get menu item by ID
+    - `POST /api/menu-items` - Create menu item
+    - `PUT /api/menu-items/{id}` - Update menu item
+    - `DELETE /api/menu-items/{id}` - Delete menu item
 
 ### Table Management
 
@@ -298,27 +298,3 @@ Run tests using Maven:
 ## 🔒 Security
 
 The application uses Spring Security for authentication and authorization. Configure security settings in `SecurityConfig.java`.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 👤 Author
-
-[Your Name/Organization]
-
-## 📧 Contact
-
-For questions or support, please contact [your-email@example.com]
-
----
-
-**Happy Coding!** 🚀
