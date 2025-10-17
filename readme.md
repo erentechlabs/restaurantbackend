@@ -1,120 +1,324 @@
-# Restaurant Backend System
+# Restaurant Backend
 
-This project is a backend application for a restaurant management system, developed using Spring Boot. The system manages tables, sessions, menu categories, subcategories, menu items, and orders. Customers can start a session by scanning an NFC tag at their table, browse the menu, and place orders digitally.
+A robust RESTful API backend application for restaurant management built with Spring Boot, featuring menu management, table management, order processing, and session tracking.
 
----
+## 📋 Table of Contents
 
-## Technologies
+- [Features](#features)
+- [Technologies](#technologies)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Running the Application](#running-the-application)
+- [Docker Support](#docker-support)
+- [API Documentation](#api-documentation)
+- [Project Structure](#project-structure)
+- [API Endpoints](#api-endpoints)
+
+## ✨ Features
+
+- **Menu Management**
+  - Restaurant management
+  - Category and subcategory organization
+  - Menu item CRUD operations
+
+- **Table Management**
+  - Table creation and management
+  - Table status tracking
+
+- **Session Management**
+  - Customer session tracking
+  - Table session association
+
+- **Order Management**
+  - Order creation and processing
+  - Order tracking
+
+- **Security**
+  - Spring Security integration
+  - RESTful API protection
+
+- **API Documentation**
+  - Interactive Swagger UI
+  - OpenAPI 3.0 specification
+
+## 🛠 Technologies
 
 - **Java 17**
 - **Spring Boot 3.5.6**
-  - Spring MVC
-  - Spring Data JPA
-  - Spring Security
-- **Maven**
-- **PostgreSQL** (Primary database)
-- **H2 Database** (For testing environment)
-- **Lombok**
+- **Spring Data JPA** - Database persistence
+- **Spring Security** - Authentication and authorization
+- **PostgreSQL** - Primary database
+- **Lombok** - Reduce boilerplate code
+- **Maven** - Dependency management
+- **Swagger/OpenAPI** - API documentation
+- **Docker** - Containerization
 
----
+## 📦 Prerequisites
 
-## Features
+Before running this application, make sure you have the following installed:
 
-- **Table Management**: Full CRUD (Create, Read, Update, Delete) operations for restaurant tables and NFC tag assignment.
-- **Session Management**: Start and end customer sessions via unique NFC tag codes.
-- **Menu Management**: Supports complex menu structures with nested categories, subcategories, and menu items.
-- **Order Management**: Place and manage orders within active sessions.
-- **RESTful API**: Well-defined endpoints for all resources.
-
----
-
-## Getting Started
-
-### Prerequisites
-
-- JDK 17+
+- Java 17 or higher
 - Maven 3.6+
-- PostgreSQL database
+- PostgreSQL 12+
+- Docker (optional, for containerized deployment)
 
-### Installation
+## 🚀 Installation
 
-1. **Clone the project:**
-
+1. **Clone the repository**
    ```bash
-   git clone https://github.com/erentechlabs/restaurantbackend.git
+   git clone <repository-url>
    cd restaurantbackend
    ```
 
-2. **Configure the database:**
+2. **Create PostgreSQL Database**
+   ```sql
+   CREATE DATABASE restaurantbackend;
+   ```
 
-   Edit the `src/main/resources/application.properties` file:
-
+3. **Configure Database Credentials**
+   
+   Update the database credentials in `src/main/resources/application.properties`:
    ```properties
-   spring.datasource.url=jdbc:postgresql://localhost:5432/restaurant_db
+   spring.datasource.url=jdbc:postgresql://localhost:5432/restaurantbackend
    spring.datasource.username=your_username
    spring.datasource.password=your_password
-   spring.jpa.hibernate.ddl-auto=update
    ```
 
-3. **Build the project:**
+## ⚙️ Configuration
 
-   ```bash
-   ./mvnw clean install
-   ```
+The application can be configured through `application.properties`:
 
-4. **Run the application:**
+```properties
+# Server Configuration
+server.port=8080
+server.address=0.0.0.0
 
-   ```bash
-   ./mvnw spring-boot:run
-   ```
+# Database Configuration
+spring.datasource.url=jdbc:postgresql://localhost:5432/restaurantbackend
+spring.datasource.username=postgres
+spring.datasource.password=123456
 
-   The application will start on port **8080** by default.
+# JPA/Hibernate Configuration
+spring.jpa.hibernate.ddl-auto=create
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
+
+# File Upload Configuration
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=10MB
+```
+
+> **Note**: For production, change `spring.jpa.hibernate.ddl-auto` to `update` or `validate`
+
+## 🏃 Running the Application
+
+### Using Maven
+
+```bash
+# Development mode
+./mvnw spring-boot:run
+
+# Or build and run the JAR
+./mvnw clean package
+java -jar target/restaurantbackend-0.0.1-SNAPSHOT.jar
+```
+
+### Using Maven Wrapper (Windows)
+
+```bash
+mvnw.cmd spring-boot:run
+```
+
+The application will start on `http://localhost:8080`
+
+## 🐳 Docker Support
+
+### Build Docker Image
+
+```bash
+# First, build the application
+./mvnw clean package
+
+# Build Docker image
+docker build -t restaurantbackend:latest .
+```
+
+### Run with Docker
+
+```bash
+docker run -p 8080:8080 \
+  -e SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/restaurantbackend \
+  -e SPRING_DATASOURCE_USERNAME=postgres \
+  -e SPRING_DATASOURCE_PASSWORD=123456 \
+  restaurantbackend:latest
+```
+
+### Docker Compose (Recommended)
+
+Create a `docker-compose.yml`:
+
+```yaml
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: restaurantbackend
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/restaurantbackend
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 123456
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+```
+
+Run with:
+```bash
+docker-compose up
+```
+
+## 📚 API Documentation
+
+Once the application is running, access the interactive API documentation:
+
+- **Swagger UI**: http://localhost:8080/swagger-ui.html
+- **OpenAPI JSON**: http://localhost:8080/v3/api-docs
+
+## 📁 Project Structure
+
+```
+restaurantbackend/
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/restaurantbackend/restaurantbackend/
+│   │   │       ├── config/              # Configuration classes
+│   │   │       │   ├── SecurityConfig.java
+│   │   │       │   ├── WebConfig.java
+│   │   │       │   └── GlobalExceptionHandler.java
+│   │   │       ├── controller/          # REST Controllers
+│   │   │       │   ├── menu/
+│   │   │       │   ├── order/
+│   │   │       │   ├── session/
+│   │   │       │   └── table/
+│   │   │       ├── dto/                 # Data Transfer Objects
+│   │   │       ├── entity/              # JPA Entities
+│   │   │       │   ├── menu/
+│   │   │       │   ├── order/
+│   │   │       │   └── table/
+│   │   │       ├── repository/          # Spring Data JPA Repositories
+│   │   │       ├── service/             # Business Logic Services
+│   │   │       └── RestaurantbackendApplication.java
+│   │   └── resources/
+│   │       └── application.properties
+│   └── test/                            # Test files
+├── target/                              # Build output
+├── Dockerfile
+├── pom.xml                              # Maven configuration
+└── README.md
+```
+
+## 🔌 API Endpoints
+
+### Menu Management
+
+- **Restaurants**
+  - `GET /api/restaurants` - Get all restaurants
+  - `GET /api/restaurants/{id}` - Get restaurant by ID
+  - `POST /api/restaurants` - Create restaurant
+  - `PUT /api/restaurants/{id}` - Update restaurant
+  - `DELETE /api/restaurants/{id}` - Delete restaurant
+
+- **Categories**
+  - `GET /api/categories` - Get all categories
+  - `GET /api/categories/{id}` - Get category by ID
+  - `POST /api/categories` - Create category
+  - `PUT /api/categories/{id}` - Update category
+  - `DELETE /api/categories/{id}` - Delete category
+
+- **Subcategories**
+  - `GET /api/subcategories` - Get all subcategories
+  - `GET /api/subcategories/{id}` - Get subcategory by ID
+  - `POST /api/subcategories` - Create subcategory
+  - `PUT /api/subcategories/{id}` - Update subcategory
+  - `DELETE /api/subcategories/{id}` - Delete subcategory
+
+- **Menu Items**
+  - `GET /api/menu-items` - Get all menu items
+  - `GET /api/menu-items/{id}` - Get menu item by ID
+  - `POST /api/menu-items` - Create menu item
+  - `PUT /api/menu-items/{id}` - Update menu item
+  - `DELETE /api/menu-items/{id}` - Delete menu item
+
+### Table Management
+
+- `GET /api/tables` - Get all tables
+- `GET /api/tables/{id}` - Get table by ID
+- `POST /api/tables` - Create table
+- `PUT /api/tables/{id}` - Update table
+- `DELETE /api/tables/{id}` - Delete table
+
+### Session Management
+
+- `POST /api/sessions/start` - Start new session
+- `GET /api/sessions/{id}` - Get session details
+
+### Order Management
+
+- `GET /api/orders` - Get all orders
+- `GET /api/orders/{id}` - Get order by ID
+- `POST /api/orders` - Create order
+- `PUT /api/orders/{id}` - Update order
+
+> **Note**: Visit Swagger UI for complete endpoint details, request/response schemas, and interactive testing.
+
+## 🧪 Testing
+
+Run tests using Maven:
+
+```bash
+./mvnw test
+```
+
+## 🔒 Security
+
+The application uses Spring Security for authentication and authorization. Configure security settings in `SecurityConfig.java`.
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 👤 Author
+
+[Your Name/Organization]
+
+## 📧 Contact
+
+For questions or support, please contact [your-email@example.com]
 
 ---
 
-## REST API Endpoint Reference
-
-All endpoints are prefixed with `/api/v1`.
-
-### Table Endpoints (`/tables`)
-
-- `GET /` — Get all tables.
-- `POST /` — Add a new table. Request body: `TableDTO`.
-- `PUT /update/{id}` — Update a table by ID. Request body: `TableDTO`.
-- `DELETE /delete/{id}` — Delete a table by ID.
-
-### Category Endpoints (`/categories`)
-
-- `GET /` — Get all categories.
-- `POST /` — Create a new category. Request body: `CategoryDTO`.
-- `PUT /{id}` — Update a category by ID. Request body: `CategoryDTO`.
-- `DELETE /{id}` — Delete a category by ID.
-
-### SubCategory Endpoints (`/categories/{categoryId}/subcategories`)
-
-- `GET /` — Get all subcategories for a category.
-- `GET /{id}` — Get a subcategory by ID within the specified category.
-- `POST /` — Create a new subcategory. Request body: `SubCategoryDTO`.
-- `PUT /{id}` — Update a subcategory by ID. Request body: `SubCategoryDTO`.
-- `DELETE /{id}` — Delete a subcategory by ID.
-
-### Menu Item Endpoints (`/categories/{categoryId}/subcategories/{subCategoryId}/menu`)
-
-- `GET /` — Get all menu items for a subcategory.
-- `GET /{id}` — Get a menu item by ID within the specified subcategory.
-- `POST /` — Add a new menu item. Request body: `MenuItemDTO`.
-- `PUT /{id}` — Update a menu item by ID. Request body: `MenuItemDTO`.
-- `DELETE /{id}` — Delete a menu item by ID.
-
-### Order Endpoints (`/orders/table`)
-
-- `POST /{sessionCode}` — Create a new restaurantOrder for a session. Request body: `List<OrderItemDTO>`.
-- `PUT /{sessionCode}` — Add new items to an existing restaurantOrder in a session. Request body: `List<OrderItemDTO>`.
-- `PUT /{orderId}/item/{oldItemName}` — Update a specific item in an restaurantOrder. Request body: `OrderItemDTO`.
-
-### Session Endpoints (`/sessions`)
-
-- `GET /` — Get all active sessions.
-- `POST /start/{nfctagCode}` — Start a session with an NFC tag code.
-- `POST /close/{sessionCode}` — Close a session with a session code.
-- `POST /start-and-restaurantOrder/{nfctagCode}` — Start a session and create an restaurantOrder simultaneously. Request body: `List<OrderItemDTO>`.
+**Happy Coding!** 🚀
