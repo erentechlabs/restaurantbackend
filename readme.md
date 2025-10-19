@@ -1,5 +1,3 @@
-                     # Restaurant Backend
-
 A robust RESTful API backend application for restaurant management built with Spring Boot, featuring menu management, table management, order processing, and session tracking.
 
 ## 📋 Table of Contents
@@ -148,9 +146,9 @@ docker build -t restaurantbackend:latest .
 
 ```bash
 docker run -p 8080:8080 \
-  -e SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5432/restaurantbackend \
-  -e SPRING_DATASOURCE_USERNAME=postgres \
-  -e SPRING_DATASOURCE_PASSWORD=123456 \
+  -e SPRING_DATASOURCE_URL=${POSTGRESQL_URL} \
+  -e SPRING_DATASOURCE_USERNAME=${POSTGRESQL_USER} \
+  -e SPRING_DATASOURCE_PASSWORD=${POSTGRESQL_PASSWORD} \
   restaurantbackend:latest
 ```
 
